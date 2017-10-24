@@ -81,7 +81,7 @@ SESSIONS=1 pgweb
 
 **Note:** This fork of pgweb can only be deployed to a Heroku Private Space.
 
-[![Heroku Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/robanderton/pgweb/tree/v0.9.9)
+[![Heroku Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/robanderton/pgweb)
 
 ## Testing
 
