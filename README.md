@@ -81,7 +81,7 @@ SESSIONS=1 pgweb
 
 **Note:** This fork of pgweb can only be deployed to a Heroku Private Space.
 
-[![Heroku Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/robanderton/pgweb)
+[![Heroku Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/robanderton/pgweb/tree/v0.9.9)
 
 ## Testing
 
@@ -116,7 +116,7 @@ make test-all
 
 If you or your company would like to sponsor a custom feature, please let me know
 via email (see contact section). Custom features are developed exclusively for the
-client and not committed to the public repo. 
+client and not committed to the public repo.
 
 ## Donations
 
@@ -127,7 +127,7 @@ the following platforms:
 - Paypal: dan.sosedoff@gmail.com
 - Bitcoin: 1qAGohEhuNEkJEhHyEQfLgXAwY7dWRhmU
 
-Any contribution is much appreciated. 
+Any contribution is much appreciated.
 
 ## Contact
 
