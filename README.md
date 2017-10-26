@@ -79,9 +79,9 @@ SESSIONS=1 pgweb
 
 ## Deploy on Heroku
 
-**Note:** This fork of pgweb can only be deployed to a Heroku Private Space.
+**Note:** This fork of pgweb can only be deployed to a Heroku Shield Space.
 
-[![Heroku Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/robanderton/pgweb)
+[![Heroku Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/robanderton/pgweb#shield)
 
 ## Testing
 
