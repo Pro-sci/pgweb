@@ -3,7 +3,7 @@
 Web-based PostgreSQL database browser written in Go.
 
 [![Release](https://img.shields.io/github/release/sosedoff/pgweb.svg?label=Release)](https://github.com/sosedoff/pgweb/releases)
-[![Linux Build](https://img.shields.io/travis/sosedoff/pgweb/master.svg?label=Linux)](https://travis-ci.org/sosedoff/pgweb)
+[![Linux Build](https://img.shields.io/travis/sosedoff/pgweb.svg?label=Linux)](https://travis-ci.org/sosedoff/pgweb)
 [![Windows Build](https://img.shields.io/appveyor/ci/sosedoff/pgweb/master.svg?label=Windows)](https://ci.appveyor.com/project/sosedoff/pgweb)
 
 ## Overview
@@ -79,9 +79,9 @@ SESSIONS=1 pgweb
 
 ## Deploy on Heroku
 
-**Note:** This fork of pgweb can only be deployed to a Heroku Private Space.
+**Note:** This fork of pgweb can only be deployed to a Heroku Shield Space.
 
-[![Heroku Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/robanderton/pgweb)
+[![Heroku Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/robanderton/pgweb#shield)
 
 ## Testing
 
@@ -112,23 +112,6 @@ make test-all
 - Use [issues](https://github.com/sosedoff/pgweb/issues) for any questions
 - Check [wiki](https://github.com/sosedoff/pgweb/wiki) for extra documentation
 
-## Premium Features
-
-If you or your company would like to sponsor a custom feature, please let me know
-via email (see contact section). Custom features are developed exclusively for the
-client and not committed to the public repo.
-
-## Donations
-
-Pgweb is free and open source software, there's no plan to make a business out of it.
-If you wish to support the development, you can send a donation of any size using
-the following platforms:
-
-- Paypal: dan.sosedoff@gmail.com
-- Bitcoin: 1qAGohEhuNEkJEhHyEQfLgXAwY7dWRhmU
-
-Any contribution is much appreciated.
-
 ## Contact
 
 - Dan Sosedoff
@@ -137,6 +120,6 @@ Any contribution is much appreciated.
 
 ## License
 
-The MIT License (MIT). See `LICENSE` file for more details.
+The MIT License (MIT)
 
 Copyright (c) 2014-2017 Dan Sosedoff, <dan.sosedoff@gmail.com>
