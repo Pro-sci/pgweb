@@ -81,7 +81,7 @@ SESSIONS=1 pgweb
 
 **Note:** This fork of pgweb can only be deployed to a Heroku Private Space. For Shield Spaces uses the [shield branch](https://github.com/robanderton/pgweb/tree/shield).
 
-[![Heroku Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/robanderton/pgweb#shield)
+[![Heroku Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/robanderton/pgweb)
 
 ## Testing
 
