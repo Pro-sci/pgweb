@@ -3,7 +3,7 @@
 Web-based PostgreSQL database browser written in Go.
 
 [![Release](https://img.shields.io/github/release/sosedoff/pgweb.svg?label=Release)](https://github.com/sosedoff/pgweb/releases)
-[![Linux Build](https://img.shields.io/travis/sosedoff/pgweb.svg?label=Linux)](https://travis-ci.org/sosedoff/pgweb)
+[![Linux Build](https://img.shields.io/travis/sosedoff/pgweb/master.svg?label=Linux)](https://travis-ci.org/sosedoff/pgweb)
 [![Windows Build](https://img.shields.io/appveyor/ci/sosedoff/pgweb/master.svg?label=Windows)](https://ci.appveyor.com/project/sosedoff/pgweb)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sosedoff/pgweb)](https://goreportcard.com/report/github.com/sosedoff/pgweb)
 [![GoDoc](https://godoc.org/github.com/sosedoff/pgweb?status.svg)](https://godoc.org/github.com/sosedoff/pgweb)
@@ -12,7 +12,7 @@ Web-based PostgreSQL database browser written in Go.
 
 Pgweb is a web-based database browser for PostgreSQL, written in Go and works
 on OSX, Linux and Windows machines. Main idea behind using Go for backend development
-is to utilize ability of the compiler to produce zero-dependency binaries for
+is to utilize ability of the compiler to produce zero-dependency binaries for 
 multiple platforms. Pgweb was created as an attempt to build very simple and portable
 application to work with local or remote PostgreSQL databases.
 
@@ -40,7 +40,7 @@ Visit https://pgweb-demo.herokuapp.com to see pgweb in action.
 
 ## Installation
 
-[Precompiled binaries](https://github.com/sosedoff/pgweb/releases) for supported
+[Precompiled binaries](https://github.com/sosedoff/pgweb/releases) for supported 
 operating systems are available.
 
 [More installation options](https://github.com/sosedoff/pgweb/wiki/Installation)
@@ -114,6 +114,23 @@ make test-all
 - Use [issues](https://github.com/sosedoff/pgweb/issues) for any questions
 - Check [wiki](https://github.com/sosedoff/pgweb/wiki) for extra documentation
 
+## Premium Features
+
+If you or your company would like to sponsor a custom feature, please let me know
+via email (see contact section). Custom features are developed exclusively for the
+client and not committed to the public repo. 
+
+## Donations
+
+Pgweb is free and open source software, there's no plan to make a business out of it.
+If you wish to support the development, you can send a donation of any size using
+the following platforms:
+
+- Paypal: dan.sosedoff@gmail.com
+- Bitcoin: 1qAGohEhuNEkJEhHyEQfLgXAwY7dWRhmU
+
+Any contribution is much appreciated. 
+
 ## Contact
 
 - Dan Sosedoff
@@ -122,10 +139,6 @@ make test-all
 
 ## License
 
-<<<<<<< HEAD
-The MIT License (MIT)
-=======
 The MIT License (MIT). See [LICENSE](LICENSE) file for more details.
->>>>>>> sosedoff/master
 
 Copyright (c) 2014-2017 Dan Sosedoff, <dan.sosedoff@gmail.com>
