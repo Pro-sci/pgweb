@@ -1,4 +1,6 @@
 sudo: required
+dist: trusty
+group: deprecated-2017Q4
 
 language: go
 
@@ -11,7 +13,7 @@ addons:
 go:
   - 1.7.6
   - 1.8.3
-  - 1.9
+  - 1.9.3
 
 env:
   - GO15VENDOREXPERIMENT=1
