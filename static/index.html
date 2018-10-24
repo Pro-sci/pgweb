@@ -78,7 +78,10 @@
       </div>
       <div id="output">
         <div class="wrapper">
-          <table id="results" class="table"></table>
+          <table id="results" class="table">
+            <thead id="results_header"></thead>
+            <tbody id="results_body"></tbody>
+          </table>
         </div>
       </div>
       <div id="pagination">
@@ -98,7 +101,7 @@
             <option value="null">IS NULL</option>
             <option value="not_null">NOT NULL</option>
           </select>
-          <input type="text" class="form-control" placeholder="Search query" />
+          <input type="text" class="form-control" placeholder="Filter value" id="table_filter_value" />
           <button class="btn btn-primary btn-sm apply-filters" type="submit">Apply</button>
           <button class="btn btn-default btn-sm reset-filters"><i class="fa fa-times"></i></button>
         </form>
@@ -272,7 +275,14 @@
     <ul class="dropdown-menu" role="menu">
       <li><a href="#" data-action="unique_values" data-counts="false">Unique Values</a></li>
       <li><a href="#" data-action="unique_values" data-counts="true">Unique Values + Counts</a></li>
+      <li><a href="#" data-action="num_stats">Numeric stats (min/max/avg)</a></li>
       <li><a href="#" data-action="copy_name">Copy Column Name</a></li>
+    </ul>
+  </div>
+  <div id="results_row_menu">
+    <ul class="dropdown-menu" role="menu">
+      <li><a href="#" data-action="copy_value">Copy Value</a></li>
+      <li><a href="#" data-action="filter_by_value">Filter Rows By Value</a></li>
     </ul>
   </div>
 </body>
