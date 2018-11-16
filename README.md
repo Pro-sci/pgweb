@@ -8,9 +8,9 @@ Web-based PostgreSQL database browser written in Go.
 [![Go Report Card](https://goreportcard.com/badge/github.com/sosedoff/pgweb)](https://goreportcard.com/report/github.com/sosedoff/pgweb)
 [![GoDoc](https://godoc.org/github.com/sosedoff/pgweb?status.svg)](https://godoc.org/github.com/sosedoff/pgweb)
 
-## Deploy on Heroku
+## Deploy to Heroku
 
-**Note:** This fork of pgweb can only be deployed to a Heroku Private Space. For Shield Spaces uses the [shield branch](https://github.com/robanderton/pgweb/tree/shield).
+**Note:** This fork of pgweb can only be deployed to a [Heroku Private Space](https://devcenter.heroku.com/articles/private-spaces). For Shield Private Spaces uses the [shield branch](https://github.com/robanderton/pgweb/tree/shield).
 
 [![Heroku Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/robanderton/pgweb)
 
