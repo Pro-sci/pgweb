@@ -1,7 +1,44 @@
-## Master
+## 0.11.2 - 2019-02-15
 
+- Fix table row estimation query for camelcase schemas, GH-414
+
+## 0.11.1 - 2019-01-28
+
+- Typo fixes
+- Add Base64 javascript encoder/decoder to replace deprecated window.atob call, GH-405
+- Fix startup error when DATABASE_URL is set, GH-406
+- Fix user auto detection when USER env var is not set, GH-408
+- Switch bindata dependency to use maintained fork: github.com/go-bindata/go-bindata, GH-409
+
+## 0.11.0 - 2018-12-24
+
+- Tweak sidebar database object counters styles, GH-400
+- Do not exit with error if local server is not running, GH-399
+- Fix SSH host verification check, GH-398
+- Scope activity list to current database only, GH-397
+- Show current release version and check for updates, GH-396
+- Force switch back to default connection settings view, GH-395
+- Fix row count estimation bug, GH-394
+- Print out failed query SQL and args with --debug flag, GH-393
+
+## 0.10.0 - 2018-11-28
+
+- Fixes relation not found errors when dealing with table names that have uppercase characters, GH-356
+- Dockerfile updates, GH-357
+- Check if pg_dump is available before running database export, GH-358
+- Improvements to CockroachDB integration, GH-365
+- Add EstimatedTableRowsCount to avoid count in large tables, GH-366
 - Automatically set table filter option to 'equals' if its not set, GH-370
-- Dockerfile updates
+- Dependencies update and switch to dep, GH-375
+- Add column context menu item to get numeric stats, GH-377
+- Fix issues with connection string builder, GH-378
+- Include rows count to numeric stats view on table column, GH-379
+- Make localhost to be a default db host, GH-380
+- Clear out connection settings/bookmark on login screen when running in session/connect mode
+- Add table row context menu with actions, GH-381
+- Allow settings url prefix with URL_PREFIX env var, GH-387
+- Fix JSON marshal panic when dealing with NaN values, GH-388
+- Fix startup behavior when user did not provide a database name, GH-389
 
 ## 0.9.12 - 2018-04-23
 

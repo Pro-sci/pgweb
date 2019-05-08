@@ -65,7 +65,6 @@ func initClient() {
 	} else {
 		cl, err = client.New()
 	}
-
 	if err != nil {
 		exitWithMessage(err.Error())
 	}
@@ -75,13 +74,28 @@ func initClient() {
 	}
 
 	fmt.Println("Connecting to server...")
-	err = cl.Test()
-	if err != nil {
-		exitWithMessage(err.Error())
+	if err := cl.Test(); err != nil {
+		msg := err.Error()
+
+		// Check if we're trying to connect to the default database.
+		if command.Opts.DbName == "" && command.Opts.Url == "" {
+			// If database does not exist, allow user to connect from the UI.
+			if strings.Contains(msg, "database") && strings.Contains(msg, "does not exist") {
+				fmt.Println("Error:", msg)
+				return
+			}
+			// Do not bail if local server is not running.
+			if strings.Contains(msg, "connection refused") {
+				fmt.Println("Error:", msg)
+				return
+			}
+		}
+
+		exitWithMessage(msg)
 	}
 
 	if !command.Opts.Sessions {
-		fmt.Printf("Conneced to %s\n", cl.ServerVersion())
+		fmt.Printf("Connected to %s\n", cl.ServerVersion())
 	}
 
 	fmt.Println("Checking database objects...")
@@ -125,7 +139,7 @@ For proper read-only access please follow postgresql role management documentati
 }
 
 func printVersion() {
-	str := fmt.Sprintf("Pgweb v%s", command.VERSION)
+	str := fmt.Sprintf("Pgweb v%s", command.Version)
 	if command.GitCommit != "" {
 		str += fmt.Sprintf(" (git: %s)", command.GitCommit)
 	}

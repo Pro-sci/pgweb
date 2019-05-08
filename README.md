@@ -7,6 +7,7 @@ Web-based PostgreSQL database browser written in Go.
 [![Windows Build](https://img.shields.io/appveyor/ci/sosedoff/pgweb/master.svg?label=Windows)](https://ci.appveyor.com/project/sosedoff/pgweb)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sosedoff/pgweb)](https://goreportcard.com/report/github.com/sosedoff/pgweb)
 [![GoDoc](https://godoc.org/github.com/sosedoff/pgweb?status.svg)](https://godoc.org/github.com/sosedoff/pgweb)
+[![Docker Pulls](https://img.shields.io/docker/pulls/sosedoff/pgweb.svg)](https://hub.docker.com/r/sosedoff/pgweb/)
 
 ## Deploy to Heroku
 
@@ -39,6 +40,18 @@ application to work with local or remote PostgreSQL databases.
 - Server bookmarks
 
 Visit [WIKI](https://github.com/sosedoff/pgweb/wiki) for more details
+
+## Pgweb Pro
+
+Pgweb Pro is the next major version of Pgweb and includes features like:
+
+- Table structure editing
+- Data editing (update row content)
+- Charting
+- History persistence
+- Multiple tabs
+
+Please get in touch via: https://goo.gl/forms/euQOGWg5uPdPH70b2
 
 ## Demo
 
@@ -124,4 +137,4 @@ make test-all
 
 The MIT License (MIT). See [LICENSE](LICENSE) file for more details.
 
-Copyright (c) 2014-2018 Dan Sosedoff, <dan.sosedoff@gmail.com>
+Copyright (c) 2014-2019 Dan Sosedoff, <dan.sosedoff@gmail.com>

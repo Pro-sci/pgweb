@@ -1,16 +1,18 @@
 package client
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	neturl "net/url"
 	"reflect"
 	"regexp"
 	"strings"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 
-	"github.com/jmoiron/sqlx"
 	"github.com/sosedoff/pgweb/pkg/command"
 	"github.com/sosedoff/pgweb/pkg/connection"
 	"github.com/sosedoff/pgweb/pkg/history"
@@ -223,9 +225,7 @@ func (client *Client) TableRows(table string, opts RowsOptions) (*Result, error)
 
 func (client *Client) EstimatedTableRowsCount(table string, opts RowsOptions) (*Result, error) {
 	schema, table := getSchemaAndTable(table)
-	sql := fmt.Sprintf(`SELECT reltuples FROM pg_class WHERE oid = '%s.%s'::regclass;`, schema, table)
-
-	result, err := client.query(sql)
+	result, err := client.query(statements.EstimatedTableRowCount, schema, table)
 	if err != nil {
 		return nil, err
 	}
@@ -237,20 +237,23 @@ func (client *Client) EstimatedTableRowsCount(table string, opts RowsOptions) (*
 }
 
 func (client *Client) TableRowsCount(table string, opts RowsOptions) (*Result, error) {
-	schema, table := getSchemaAndTable(table)
-	sql := fmt.Sprintf(`SELECT COUNT(1) FROM "%s"."%s"`, schema, table)
-
-	if opts.Where != "" {
-		sql += fmt.Sprintf(" WHERE %s", opts.Where)
-	} else if client.serverType == postgresType {
-		tableInfo, err := client.TableInfo(table)
+	// Return postgres estimated rows count on empty filter
+	if opts.Where == "" && client.serverType == postgresType {
+		res, err := client.EstimatedTableRowsCount(table, opts)
 		if err != nil {
 			return nil, err
 		}
-		estimatedRowsCount := tableInfo.Rows[0][3].(float64)
-		if estimatedRowsCount > 100000 {
-			return client.EstimatedTableRowsCount(table, opts)
+		n := res.Rows[0][0].(int64)
+		if n >= 100000 {
+			return res, nil
 		}
+	}
+
+	schema, tableName := getSchemaAndTable(table)
+	sql := fmt.Sprintf(`SELECT COUNT(1) FROM "%s"."%s"`, schema, tableName)
+
+	if opts.Where != "" {
+		sql += fmt.Sprintf(" WHERE %s", opts.Where)
 	}
 
 	return client.query(sql)
@@ -342,6 +345,9 @@ func (client *Client) query(query string, args ...interface{}) (*Result, error) 
 		if err := client.SetReadOnlyMode(); err != nil {
 			return nil, err
 		}
+		if containsRestrictedKeywords(query) {
+			return nil, errors.New("query contains keywords not allowed in read-only mode")
+		}
 	}
 
 	action := strings.ToLower(strings.Split(query, " ")[0])
@@ -368,9 +374,11 @@ func (client *Client) query(query string, args ...interface{}) (*Result, error) 
 
 	rows, err := client.db.Queryx(query, args...)
 	if err != nil {
+		if command.Opts.Debug {
+			log.Println("Failed query:", query, "\nArgs:", args)
+		}
 		return nil, err
 	}
-
 	defer rows.Close()
 
 	cols, err := rows.Columns()
