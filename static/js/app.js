@@ -78,6 +78,7 @@ function apiCall(method, path, params, cb) {
   });
 }
 
+function getInfo(cb)                        { apiCall("get", "/info", {}, cb); }
 function getObjects(cb)                     { apiCall("get", "/objects", {}, cb); }
 function getTables(cb)                      { apiCall("get", "/tables", {}, cb); }
 function getTableRows(table, opts, cb)      { apiCall("get", "/tables/" + table + "/rows", opts, cb); }
@@ -91,7 +92,7 @@ function explainQuery(query, cb)            { apiCall("post", "/explain", { quer
 function disconnect(cb)                     { apiCall("post", "/disconnect", {}, cb); }
 
 function encodeQuery(query) {
-  return window.btoa(query).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, ".");
+  return Base64.encode(query).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, ".");
 }
 
 function buildSchemaSection(name, objects) {
@@ -123,7 +124,7 @@ function buildSchemaSection(name, objects) {
     if (name == "public" && group == "table") group_klass = "expanded";
 
     section += "<div class='schema-group " + group_klass + "'>";
-    section += "<div class='schema-group-title'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-down'></i> " + titles[group] + " (" + objects[group].length + ")</div>";
+    section += "<div class='schema-group-title'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-down'></i> " + titles[group] + " <span class='schema-group-count'>" + objects[group].length + "</span></div>";
     section += "<ul data-group='" + group + "'>";
 
     if (objects[group]) {
@@ -297,7 +298,7 @@ function buildTable(results, sortColumn, sortOrder, options) {
 
   if (results.rows.length == 0) {
     $("#results_header").html("");
-    $("#results_body").html("<tr><td>No records found</tr></tr>");
+    $("#results_body").html("<tr><td>No records found</td></tr>");
     $("#result-rows-count").html("");
     $("#results").addClass("empty");
     return;
@@ -770,7 +771,36 @@ function addShortcutTooltips() {
   }
 }
 
+// Get the latest release from Github API
+function getLatestReleaseInfo(current) {
+  try {
+    $.get("https://api.github.com/repos/sosedoff/pgweb/releases/latest", function(release) {
+      if (release.name != current.version) {
+        var message = "Update available. Check out " + release.tag_name + " on <a target='_blank' href='" + release.html_url + "'>Github</a>";
+        $(".connection-settings .update").html(message).fadeIn();
+      }
+    });
+  }
+  catch(error) {
+    console.log("Cant get last release from github:", error);
+  }
+}
+
 function showConnectionSettings() {
+  // Fetch server info
+  getInfo(function(data) {
+    if (data.error) return;
+    if (!data.version) return;
+
+    // Show the current postgres version
+    $(".connection-settings .version").text("v" + data.version).show();
+
+    // Check for updates if running the actual release from Github
+    if (data.git_sha == "") {
+      getLatestReleaseInfo(data);
+    }
+  });
+
   getBookmarks(function(data) {
     // Do not add any bookmarks if we've got an error
     if (data.error) {
@@ -1304,6 +1334,7 @@ $(document).ready(function() {
       $("#ssh_password").val("");
       $("#ssh_key").val("");
       $(".connection-ssh-group").hide();
+      $("#connection_standard").click();
     }
   });
 

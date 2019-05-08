@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/sosedoff/pgweb/pkg/command"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -78,6 +78,9 @@ func onWindows() bool {
 }
 
 func setup() {
+	// No pretty JSON for testsm
+	command.Opts.DisablePrettyJson = true
+
 	out, err := exec.Command(
 		testCommands["createdb"],
 		"-U", serverUser,
@@ -133,7 +136,7 @@ func teardown() {
 	}
 }
 
-func test_NewClientFromUrl(t *testing.T) {
+func testNewClientFromUrl(t *testing.T) {
 	url := fmt.Sprintf("postgres://%s@%s:%s/%s?sslmode=disable", serverUser, serverHost, serverPort, serverDatabase)
 	client, err := NewFromUrl(url, nil)
 
@@ -145,7 +148,7 @@ func test_NewClientFromUrl(t *testing.T) {
 	assert.Equal(t, url, client.ConnectionString)
 }
 
-func test_NewClientFromUrl2(t *testing.T) {
+func testNewClientFromUrl2(t *testing.T) {
 	url := fmt.Sprintf("postgresql://%s@%s:%s/%s?sslmode=disable", serverUser, serverHost, serverPort, serverDatabase)
 	client, err := NewFromUrl(url, nil)
 
@@ -157,7 +160,7 @@ func test_NewClientFromUrl2(t *testing.T) {
 	assert.Equal(t, url, client.ConnectionString)
 }
 
-func test_ClientIdleTime(t *testing.T) {
+func testClientIdleTime(t *testing.T) {
 	examples := map[time.Time]bool{
 		time.Now():                         false, // Current time
 		time.Now().Add(time.Minute * -30):  false, // 30 minutes ago
@@ -172,25 +175,25 @@ func test_ClientIdleTime(t *testing.T) {
 	}
 }
 
-func test_Test(t *testing.T) {
+func testTest(t *testing.T) {
 	assert.Equal(t, nil, testClient.Test())
 }
 
-func test_Info(t *testing.T) {
+func testInfo(t *testing.T) {
 	res, err := testClient.Info()
 
 	assert.Equal(t, nil, err)
 	assert.NotEqual(t, nil, res)
 }
 
-func test_Activity(t *testing.T) {
+func testActivity(t *testing.T) {
 	res, err := testClient.Activity()
 
 	assert.Equal(t, nil, err)
 	assert.NotEqual(t, nil, res)
 }
 
-func test_Databases(t *testing.T) {
+func testDatabases(t *testing.T) {
 	res, err := testClient.Databases()
 
 	assert.Equal(t, nil, err)
@@ -198,7 +201,7 @@ func test_Databases(t *testing.T) {
 	assert.Contains(t, res, "postgres")
 }
 
-func test_Objects(t *testing.T) {
+func testObjects(t *testing.T) {
 	res, err := testClient.Objects()
 	objects := ObjectsFromResult(res)
 
@@ -244,7 +247,7 @@ func test_Objects(t *testing.T) {
 	}
 }
 
-func test_Table(t *testing.T) {
+func testTable(t *testing.T) {
 	res, err := testClient.Table("books")
 
 	columns := []string{
@@ -262,7 +265,7 @@ func test_Table(t *testing.T) {
 	assert.Equal(t, 4, len(res.Rows))
 }
 
-func test_TableRows(t *testing.T) {
+func testTableRows(t *testing.T) {
 	res, err := testClient.TableRows("books", RowsOptions{})
 
 	assert.Equal(t, nil, err)
@@ -270,7 +273,7 @@ func test_TableRows(t *testing.T) {
 	assert.Equal(t, 15, len(res.Rows))
 }
 
-func test_TableInfo(t *testing.T) {
+func testTableInfo(t *testing.T) {
 	res, err := testClient.TableInfo("books")
 
 	assert.Equal(t, nil, err)
@@ -278,7 +281,7 @@ func test_TableInfo(t *testing.T) {
 	assert.Equal(t, 1, len(res.Rows))
 }
 
-func test_EstimatedTableRowsCount(t *testing.T) {
+func testEstimatedTableRowsCount(t *testing.T) {
 	var count int64 = 15
 	res, err := testClient.EstimatedTableRowsCount("books", RowsOptions{})
 
@@ -287,7 +290,7 @@ func test_EstimatedTableRowsCount(t *testing.T) {
 	assert.Equal(t, []Row{Row{count}}, res.Rows)
 }
 
-func test_TableRowsCount(t *testing.T) {
+func testTableRowsCount(t *testing.T) {
 	var count int64 = 15
 	res, err := testClient.TableRowsCount("books", RowsOptions{})
 
@@ -296,9 +299,9 @@ func test_TableRowsCount(t *testing.T) {
 	assert.Equal(t, []Row{Row{count}}, res.Rows)
 }
 
-func test_TableRowsCountWithLargeTable(t *testing.T) {
+func testTableRowsCountWithLargeTable(t *testing.T) {
 	var count int64 = 100010
-	testClient.db.MustExec(`create table large_table as select s from generate_Series(1,100010) s;`)
+	testClient.db.MustExec(`CREATE TABLE large_table AS SELECT s FROM generate_Series(1,100010) s;`)
 	testClient.db.MustExec(`VACUUM large_table;`)
 	res, err := testClient.TableRowsCount("large_table", RowsOptions{})
 
@@ -307,7 +310,7 @@ func test_TableRowsCountWithLargeTable(t *testing.T) {
 	assert.Equal(t, []Row{Row{count}}, res.Rows)
 }
 
-func test_TableIndexes(t *testing.T) {
+func testTableIndexes(t *testing.T) {
 	res, err := testClient.TableIndexes("books")
 
 	assert.Equal(t, nil, err)
@@ -315,7 +318,7 @@ func test_TableIndexes(t *testing.T) {
 	assert.Equal(t, 2, len(res.Rows))
 }
 
-func test_TableConstraints(t *testing.T) {
+func testTableConstraints(t *testing.T) {
 	res, err := testClient.TableConstraints("editions")
 
 	assert.Equal(t, nil, err)
@@ -324,7 +327,30 @@ func test_TableConstraints(t *testing.T) {
 	assert.Equal(t, Row{"integrity", "CHECK (book_id IS NOT NULL AND edition IS NOT NULL)"}, res.Rows[1])
 }
 
-func test_Query(t *testing.T) {
+func testTableNameWithCamelCase(t *testing.T) {
+	testClient.db.MustExec(`CREATE TABLE "exampleTable" (id int, name varchar);`)
+	testClient.db.MustExec(`INSERT INTO "exampleTable" (id, name) VALUES (1, 'foo'), (2, 'bar');`)
+
+	_, err := testClient.Table("exampleTable")
+	assert.NoError(t, err)
+
+	_, err = testClient.TableInfo("exampleTable")
+	assert.NoError(t, err)
+
+	_, err = testClient.TableConstraints("exampleTable")
+	assert.NoError(t, err)
+
+	_, err = testClient.TableIndexes("exampleTable")
+	assert.NoError(t, err)
+
+	_, err = testClient.TableRowsCount("exampleTable", RowsOptions{})
+	assert.NoError(t, err)
+
+	_, err = testClient.EstimatedTableRowsCount("exampleTable", RowsOptions{})
+	assert.NoError(t, err)
+}
+
+func testQuery(t *testing.T) {
 	res, err := testClient.Query("SELECT * FROM books")
 
 	assert.Equal(t, nil, err)
@@ -332,7 +358,7 @@ func test_Query(t *testing.T) {
 	assert.Equal(t, 15, len(res.Rows))
 }
 
-func test_QueryError(t *testing.T) {
+func testQueryError(t *testing.T) {
 	res, err := testClient.Query("SELCT * FROM books")
 
 	assert.NotEqual(t, nil, err)
@@ -340,7 +366,7 @@ func test_QueryError(t *testing.T) {
 	assert.Equal(t, true, res == nil)
 }
 
-func test_QueryInvalidTable(t *testing.T) {
+func testQueryInvalidTable(t *testing.T) {
 	res, err := testClient.Query("SELECT * FROM books2")
 
 	assert.NotEqual(t, nil, err)
@@ -348,7 +374,7 @@ func test_QueryInvalidTable(t *testing.T) {
 	assert.Equal(t, true, res == nil)
 }
 
-func test_TableRowsOrderEscape(t *testing.T) {
+func testTableRowsOrderEscape(t *testing.T) {
 	rows, err := testClient.TableRows("dummies", RowsOptions{SortColumn: "isDummy"})
 	assert.Equal(t, nil, err)
 	assert.Equal(t, 2, len(rows.Rows))
@@ -359,7 +385,14 @@ func test_TableRowsOrderEscape(t *testing.T) {
 	assert.Equal(t, true, rows == nil)
 }
 
-func test_ResultCsv(t *testing.T) {
+func testResultJSON(t *testing.T) {
+	result, err := testClient.Query("SELECT 'NaN'::float AS value;")
+
+	assert.NoError(t, err)
+	assert.Equal(t, `[{"value":null}]`, string(result.JSON()))
+}
+
+func testResultCsv(t *testing.T) {
 	res, _ := testClient.Query("SELECT * FROM books ORDER BY id ASC LIMIT 1")
 	csv := res.CSV()
 
@@ -368,7 +401,7 @@ func test_ResultCsv(t *testing.T) {
 	assert.Equal(t, expected, string(csv))
 }
 
-func test_History(t *testing.T) {
+func testHistory(t *testing.T) {
 	_, err := testClient.Query("SELECT * FROM books WHERE id = 12345")
 	query := testClient.History[len(testClient.History)-1].Query
 
@@ -376,7 +409,7 @@ func test_History(t *testing.T) {
 	assert.Equal(t, "SELECT * FROM books WHERE id = 12345", query)
 }
 
-func test_HistoryError(t *testing.T) {
+func testHistoryError(t *testing.T) {
 	_, err := testClient.Query("SELECT * FROM books123")
 	query := testClient.History[len(testClient.History)-1].Query
 
@@ -384,7 +417,7 @@ func test_HistoryError(t *testing.T) {
 	assert.NotEqual(t, "SELECT * FROM books123", query)
 }
 
-func test_HistoryUniqueness(t *testing.T) {
+func testHistoryUniqueness(t *testing.T) {
 	url := fmt.Sprintf("postgres://%s@%s:%s/%s?sslmode=disable", serverUser, serverHost, serverPort, serverDatabase)
 	client, _ := NewFromUrl(url, nil)
 
@@ -395,16 +428,34 @@ func test_HistoryUniqueness(t *testing.T) {
 	assert.Equal(t, "SELECT * FROM books WHERE id = 1", client.History[0].Query)
 }
 
-func test_ReadOnlyMode(t *testing.T) {
+func testReadOnlyMode(t *testing.T) {
+	command.Opts.ReadOnly = true
+	defer func() {
+		command.Opts.ReadOnly = false
+	}()
+
 	url := fmt.Sprintf("postgres://%s@%s:%s/%s?sslmode=disable", serverUser, serverHost, serverPort, serverDatabase)
 	client, _ := NewFromUrl(url, nil)
 
 	err := client.SetReadOnlyMode()
-	assert.Equal(t, nil, err)
+	assert.NoError(t, err)
 
-	_, err = client.Query("CREATE TABLE foobar(id integer);")
+	_, err = client.Query("\nCREATE TABLE foobar(id integer);\n")
 	assert.NotNil(t, err)
-	assert.Contains(t, err.Error(), "in a read-only transaction")
+	assert.Error(t, err, "query contains keywords not allowed in read-only mode")
+
+	// Turn off guard
+	client.db.Exec("SET default_transaction_read_only=off;")
+
+	_, err = client.Query("\nCREATE TABLE foobar(id integer);\n")
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "query contains keywords not allowed in read-only mode")
+
+	_, err = client.Query("-- CREATE TABLE foobar(id integer);\nSELECT 'foo';")
+	assert.NoError(t, err)
+
+	_, err = client.Query("/* CREATE TABLE foobar(id integer); */ SELECT 'foo';")
+	assert.NoError(t, err)
 }
 
 func TestAll(t *testing.T) {
@@ -419,31 +470,33 @@ func TestAll(t *testing.T) {
 	setup()
 	setupClient()
 
-	test_NewClientFromUrl(t)
-	test_ClientIdleTime(t)
-	test_Test(t)
-	test_Info(t)
-	test_Activity(t)
-	test_Databases(t)
-	test_Objects(t)
-	test_Table(t)
-	test_TableRows(t)
-	test_TableInfo(t)
-	test_EstimatedTableRowsCount(t)
-	test_TableRowsCount(t)
-	test_TableRowsCountWithLargeTable(t)
-	test_TableIndexes(t)
-	test_TableConstraints(t)
-	test_Query(t)
-	test_QueryError(t)
-	test_QueryInvalidTable(t)
-	test_TableRowsOrderEscape(t)
-	test_ResultCsv(t)
-	test_History(t)
-	test_HistoryUniqueness(t)
-	test_HistoryError(t)
-	test_ReadOnlyMode(t)
-	test_DumpExport(t)
+	testNewClientFromUrl(t)
+	testClientIdleTime(t)
+	testTest(t)
+	testInfo(t)
+	testActivity(t)
+	testDatabases(t)
+	testObjects(t)
+	testTable(t)
+	testTableRows(t)
+	testTableInfo(t)
+	testEstimatedTableRowsCount(t)
+	testTableRowsCount(t)
+	testTableRowsCountWithLargeTable(t)
+	testTableIndexes(t)
+	testTableConstraints(t)
+	testTableNameWithCamelCase(t)
+	testQuery(t)
+	testQueryError(t)
+	testQueryInvalidTable(t)
+	testTableRowsOrderEscape(t)
+	testResultJSON(t)
+	testResultCsv(t)
+	testHistory(t)
+	testHistoryUniqueness(t)
+	testHistoryError(t)
+	testReadOnlyMode(t)
+	testDumpExport(t)
 
 	teardownClient()
 	teardown()
