@@ -479,12 +479,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: pre;
-
-  /*
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  */
 }
 
 #results td div span.null {
@@ -534,6 +528,7 @@
   bottom: 0px;
   right: 0px;
   display: none;
+  overflow-y: auto;
 }
 
 .connection-actions {
@@ -622,6 +617,12 @@
   z-index: 1000;
 }
 
+.connection-ssh-group h3 {
+  font-size: 18px;
+  margin: 0px 0px 20px 0px;
+  color: #aaa;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Sidebar Schema Objects */
 /* -------------------------------------------------------------------------- */
@@ -641,6 +642,7 @@
   height: 30px;
   padding: 0px 8px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .schema .schema-container {
@@ -729,6 +731,10 @@
   background: #f9f9f9 !important;
 }
 
-.ace_active-line {
+.ace_content .ace_active-line {
   background: none !important;
+}
+
+.ace_autocomplete .ace_active-line {
+  background: #eee !important;
 }

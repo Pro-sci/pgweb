@@ -12,15 +12,18 @@ import (
 type Options struct {
 	Version                      bool   `short:"v" long:"version" description:"Print version"`
 	Debug                        bool   `short:"d" long:"debug" description:"Enable debugging mode"`
-	Url                          string `long:"url" description:"Database connection string"`
+	URL                          string `long:"url" description:"Database connection string"`
 	Host                         string `long:"host" description:"Server hostname or IP" default:"localhost"`
 	Port                         int    `long:"port" description:"Server port" default:"5432"`
 	User                         string `long:"user" description:"Database user"`
 	Pass                         string `long:"pass" description:"Password for user"`
 	DbName                       string `long:"db" description:"Database name"`
-	Ssl                          string `long:"ssl" description:"SSL option"`
-	HttpHost                     string `long:"bind" description:"HTTP server host" default:"localhost"`
-	HttpPort                     uint   `long:"listen" description:"HTTP server listen port" default:"8081"`
+	Ssl                          string `long:"ssl" description:"SSL mode"`
+	SslRootCert                  string `long:"ssl-rootcert" description:"SSL certificate authority file"`
+	SslCert                      string `long:"ssl-cert" description:"SSL client certificate file"`
+	SslKey                       string `long:"ssl-key" description:"SSL client certificate key file"`
+	HTTPHost                     string `long:"bind" description:"HTTP server host" default:"localhost"`
+	HTTPPort                     uint   `long:"listen" description:"HTTP server listen port" default:"8081"`
 	AuthUser                     string `long:"auth-user" description:"HTTP basic auth user"`
 	AuthPass                     string `long:"auth-pass" description:"HTTP basic auth password"`
 	SkipOpen                     bool   `short:"s" long:"skip-open" description:"Skip browser open on start"`
@@ -30,7 +33,7 @@ type Options struct {
 	LockSession                  bool   `long:"lock-session" description:"Lock session to a single database connection"`
 	Bookmark                     string `short:"b" long:"bookmark" description:"Bookmark to use for connection. Bookmark files are stored under $HOME/.pgweb/bookmarks/*.toml" default:""`
 	BookmarksDir                 string `long:"bookmarks-dir" description:"Overrides default directory for bookmark files to search" default:""`
-	DisablePrettyJson            bool   `long:"no-pretty-json" description:"Disable JSON formatting feature for result export"`
+	DisablePrettyJSON            bool   `long:"no-pretty-json" description:"Disable JSON formatting feature for result export"`
 	DisableSSH                   bool   `long:"no-ssh" description:"Disable database connections via SSH"`
 	ConnectBackend               string `long:"connect-backend" description:"Enable database authentication through a third party backend"`
 	ConnectToken                 string `long:"connect-token" description:"Authentication token for the third-party connect backend"`
@@ -43,6 +46,7 @@ type Options struct {
 
 var Opts Options
 
+// ParseOptions returns a new options struct from the input arguments
 func ParseOptions(args []string) (Options, error) {
 	var opts = Options{}
 
@@ -51,8 +55,8 @@ func ParseOptions(args []string) (Options, error) {
 		return opts, err
 	}
 
-	if opts.Url == "" {
-		opts.Url = os.Getenv("DATABASE_URL")
+	if opts.URL == "" {
+		opts.URL = os.Getenv("DATABASE_URL")
 	}
 
 	if opts.Prefix == "" {
@@ -80,7 +84,7 @@ func ParseOptions(args []string) (Options, error) {
 
 	if opts.Sessions || opts.ConnectBackend != "" {
 		opts.Bookmark = ""
-		opts.Url = ""
+		opts.URL = ""
 		opts.Host = ""
 		opts.User = ""
 		opts.Pass = ""

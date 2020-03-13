@@ -1,3 +1,31 @@
+## 0.11.6 - 2020-02-19
+
+- Add CLI options for SSL key, cert and root certs, GH-452
+- Remove double click action on cell, GH-455
+
+## 0.11.5 - 2019-12-16
+
+- Add basic SQL keyword autocompletion, GH-443
+- SSH Private Key handling update (encrypted keys are supported now), GH-445
+- Include Go version into `pgweb --version` output, GH-447
+- Fix long table name bug in the sidebar, GH-448
+- Add SQL objects (table,views,etc) autocompletion, GH-449
+- Include Go version into info API endpoint, GH-450
+
+## 0.11.4 - 2019-10-05
+
+- Fix SQL export filename, GH-438
+- Update Docker image to alpine:3.10, GH-439
+- Drop unsupported pg_dump options from connection string, GH-441
+- Misc code cleanup and formatting, GH-442
+
+## 0.11.3 - 2019-07-24
+
+- Misc: add script to update homebrew formula version, GH-423
+- Destructive keyword restriction in read-only mode, GH-421
+- Make database object searchable in sidebar, GH-434
+- Update lib/pg to 1.1.1, GH-435
+
 ## 0.11.2 - 2019-02-15
 
 - Fix table row estimation query for camelcase schemas, GH-414
@@ -191,7 +219,7 @@
 ## 0.6.0 - 2015-05-31
 
 - Adds ability to execute only selected SQL query in run command view, [GH-85]
-- Adds ability to delete/truncate table via context meny on sidebar view 
+- Adds ability to delete/truncate table via context meny on sidebar view
 - Adds ability to export table contents to CSV via context menu on sidebar view
 - Changes sidebar color scheme to a lighter and better looking one
 

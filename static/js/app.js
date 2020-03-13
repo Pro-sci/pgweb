@@ -1,8 +1,9 @@
-var editor             = null;
-var connected          = false;
-var bookmarks          = {};
-var default_rows_limit = 100;
-var currentObject      = null;
+var editor              = null;
+var connected           = false;
+var bookmarks           = {};
+var default_rows_limit  = 100;
+var currentObject       = null;
+var autocompleteObjects = [];
 
 var filterOptions = {
   "equal":      "= 'DATA'",
@@ -160,6 +161,23 @@ function loadSchemas() {
 
     if (Object.keys(data).length == 1) {
       $(".schema").addClass("expanded");
+    }
+
+    // Clear out all autocomplete objects
+    autocompleteObjects = [];
+    for (schema in data) {
+      for (kind in data[schema]) {
+        if (!(kind == "table" || kind == "view" || kind == "materialized_view")) {
+          continue
+        }
+        for (item in data[schema][kind]) {
+          autocompleteObjects.push({
+            caption: data[schema][kind][item],
+            value: data[schema][kind][item],
+            meta: kind
+          });
+        }
+      }
     }
 
     bindContextMenus();
@@ -712,9 +730,21 @@ function buildTableFilters(name, type) {
   });
 }
 
+var objectAutocompleter = {
+  getCompletions: function (editor, session, pos, prefix, callback) {
+    callback(null, autocompleteObjects);
+  }
+}
+
 function initEditor() {
   var writeQueryTimeout = null;
+
   editor = ace.edit("custom_query");
+  editor.setOptions({
+    enableBasicAutocompletion: true,
+    enableLiveAutocompletion: true,
+  });
+  editor.completers.push(objectAutocompleter);
 
   editor.setFontSize(13);
   editor.setTheme("ace/theme/tomorrow");
@@ -1113,26 +1143,6 @@ $(document).ready(function() {
     showTableContent(sortColumn, sortOrder);
   });
 
-  $("#results").on("dblclick", "td > div", function() {
-    if ($(this).has("textarea").length > 0) {
-      return;
-    }
-
-    var value = unescapeHtml($(this).html());
-    if (!value) { return; }
-
-    var textarea = $("<textarea />").
-      text(value).
-      addClass("form-control").
-      css("width", $(this).css("width"));
-
-    if (value.split("\n").length >= 3) {
-      textarea.css("height", "200px");
-    }
-
-    $(this).html(textarea).css("max-height", "200px");
-  });
-
   $("#refresh_tables").on("click", function() {
     loadSchemas();
   });
@@ -1325,6 +1335,7 @@ $(document).ready(function() {
       $("#ssh_user").val(item.ssh.user);
       $("#ssh_password").val(item.ssh.password);
       $("#ssh_key").val(item.ssh.key);
+      $("#ssh_key_password").val(item.ssh.keypassword);
       $("#connection_ssh").click();
     }
     else {
@@ -1333,6 +1344,7 @@ $(document).ready(function() {
       $("#ssh_user").val("");
       $("#ssh_password").val("");
       $("#ssh_key").val("");
+      $("#ssh_key_password").val("");
       $(".connection-ssh-group").hide();
       $("#connection_standard").click();
     }
@@ -1351,12 +1363,13 @@ $(document).ready(function() {
     }
 
     if ($(".connection-group-switch button.active").attr("data") == "ssh") {
-      params["ssh"]          = 1
-      params["ssh_host"]     = $("#ssh_host").val();
-      params["ssh_port"]     = $("#ssh_port").val();
-      params["ssh_user"]     = $("#ssh_user").val();
-      params["ssh_password"] = $("#ssh_password").val();
-      params["ssh_key"]      = $("#ssh_key").val();
+      params["ssh"]              = 1
+      params["ssh_host"]         = $("#ssh_host").val();
+      params["ssh_port"]         = $("#ssh_port").val();
+      params["ssh_user"]         = $("#ssh_user").val();
+      params["ssh_password"]     = $("#ssh_password").val();
+      params["ssh_key"]          = $("#ssh_key").val();
+      params["ssh_key_password"] = $("#ssh_key_password").val()
     }
 
     $("#connection_error").hide();

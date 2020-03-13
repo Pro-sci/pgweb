@@ -19,7 +19,16 @@ import (
 	"github.com/sosedoff/pgweb/pkg/util"
 )
 
-var options command.Options
+var (
+	options command.Options
+
+	readonlyWarning = `
+------------------------------------------------------
+SECURITY WARNING: You are running pgweb in read-only mode.
+This mode is designed for environments where users could potentially delete / change data.
+For proper read-only access please follow postgresql role management documentation.
+------------------------------------------------------`
+)
 
 func exitWithMessage(message string) {
 	fmt.Println("Error:", message)
@@ -35,8 +44,8 @@ func initClientUsingBookmark(bookmarkPath, bookmarkName string) (*client.Client,
 	opt := bookmark.ConvertToOptions()
 	var connStr string
 
-	if opt.Url != "" { // if the bookmark has url set, use it
-		connStr = opt.Url
+	if opt.URL != "" { // if the bookmark has url set, use it
+		connStr = opt.URL
 	} else {
 		connStr, err = connection.BuildStringFromOptions(opt)
 		if err != nil {
@@ -46,7 +55,7 @@ func initClientUsingBookmark(bookmarkPath, bookmarkName string) (*client.Client,
 
 	var ssh *shared.SSHInfo
 	if !bookmark.SSHInfoIsEmpty() {
-		ssh = bookmark.Ssh
+		ssh = bookmark.SSH
 	}
 
 	return client.NewFromUrl(connStr, ssh)
@@ -78,7 +87,7 @@ func initClient() {
 		msg := err.Error()
 
 		// Check if we're trying to connect to the default database.
-		if command.Opts.DbName == "" && command.Opts.Url == "" {
+		if command.Opts.DbName == "" && command.Opts.URL == "" {
 			// If database does not exist, allow user to connect from the UI.
 			if strings.Contains(msg, "database") && strings.Contains(msg, "does not exist") {
 				fmt.Println("Error:", msg)
@@ -127,24 +136,21 @@ func initOptions() {
 	}
 
 	if options.ReadOnly {
-		msg := `------------------------------------------------------
-SECURITY WARNING: You are running pgweb in read-only mode.
-This mode is designed for environments where users could potentially delete / change data.
-For proper read-only access please follow postgresql role management documentation.
-------------------------------------------------------`
-		fmt.Println(msg)
+		fmt.Println(readonlyWarning)
 	}
 
 	printVersion()
 }
 
 func printVersion() {
-	str := fmt.Sprintf("Pgweb v%s", command.Version)
+	chunks := []string{fmt.Sprintf("Pgweb v%s", command.Version)}
 	if command.GitCommit != "" {
-		str += fmt.Sprintf(" (git: %s)", command.GitCommit)
+		chunks = append(chunks, fmt.Sprintf("(git: %s)", command.GitCommit))
 	}
-
-	fmt.Println(str)
+	if command.GoVersion != "" {
+		chunks = append(chunks, fmt.Sprintf("(go: %s)", command.GoVersion))
+	}
+	fmt.Println(strings.Join(chunks, " "))
 }
 
 func startServer() {
@@ -160,7 +166,7 @@ func startServer() {
 
 	fmt.Println("Starting server...")
 	go func() {
-		err := router.Run(fmt.Sprintf("%v:%v", options.HttpHost, options.HttpPort))
+		err := router.Run(fmt.Sprintf("%v:%v", options.HTTPHost, options.HTTPPort))
 		if err != nil {
 			fmt.Println("Cant start server:", err)
 			if strings.Contains(err.Error(), "address already in use") {
@@ -178,7 +184,7 @@ func handleSignals() {
 }
 
 func openPage() {
-	url := fmt.Sprintf("http://%v:%v/%s", options.HttpHost, options.HttpPort, options.Prefix)
+	url := fmt.Sprintf("http://%v:%v/%s", options.HTTPHost, options.HTTPPort, options.Prefix)
 	fmt.Println("To view database open", url, "in browser")
 
 	if options.SkipOpen {
